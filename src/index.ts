@@ -1,0 +1,1 @@
+export { Tickie } from "./Tickie";
