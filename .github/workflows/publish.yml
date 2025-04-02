@@ -1,36 +1,40 @@
 name: Publish
 
+# 不需要更改配置，直接使用
+# 需要的是在github仓库中配置repository secrets
+# 添加NPM_TOKEN
+
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   publish:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18.x'
-        registry-url: 'https://registry.npmjs.org'
+      - uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: npm ci
-        
-    - run: npm run build
-    
-    - name: Check version and publish
-      run: |
-        VERSION=$(node -p "require('./package.json').version")
-        if ! npm view . versions | grep -q "\"$VERSION\""; then
-          npm publish
-        else
-          echo "Version $VERSION already exists, skipping publish"
-        fi
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - run: npm run build
+
+      - name: Check version and publish
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if ! npm view . versions | grep -q "\"$VERSION\""; then
+            npm publish
+          else
+            echo "Version $VERSION already exists, skipping publish"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

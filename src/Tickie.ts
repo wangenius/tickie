@@ -121,7 +121,7 @@ export class Tickie {
     this.store.set({ timer: undefined });
   }
 
-  private calculateNextRun(cronExpression: string): Date {
+  calculateNextRun(cronExpression: string): Date {
     try {
       const interval = CronExpressionParser.parse(cronExpression, {
         currentDate: new Date(),
